@@ -114,7 +114,7 @@ extension PostgreSQLDatabase: QuerySupporting {
 
 extension Dictionary where Key == String, Value == FluentPostgreSQLQuery.Expression {
     func postgresExpression() -> [PostgreSQLExpression] {
-        return self.map { pair -> PostgreSQLExpression in
+        return self.sorted { $0.key < $1.key }.map { pair -> PostgreSQLExpression in
             switch pair.value {
             case ._literal(let literal):
                 switch literal {
@@ -127,6 +127,6 @@ extension Dictionary where Key == String, Value == FluentPostgreSQLQuery.Express
     }
     
     func columns() -> [PostgreSQLColumnIdentifier] {
-        return self.map { .column(nil, .identifier($0.key)) }
+        return self.keys.sorted().map { .column(nil, .identifier($0)) }
     }
 }
